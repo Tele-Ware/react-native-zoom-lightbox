@@ -10,19 +10,33 @@ import {
 import SwipeableViews from 'react-swipeable-views-native';
 import PropTypes from 'prop-types';
 import ImageCustom from '../ImageCustom';
+import SafeArea from 'react-native-safe-area'
 
 const ANIM_CONFIG = { duration: 200 };
 const { width, height } = Dimensions.get('window');
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export default class SingleImage extends PureComponent {
 
+  state = {
+    notch: 0
+  }
+
   static propTypes = {
     uri: PropTypes.string,
-    style:PropTypes.object,
+    style: PropTypes.object,
   }
 
   static defaultProps = {
     uri: 'https://avatars2.githubusercontent.com/u/31804215?s=40&v=4',
+  }
+
+  componentDidMount = () => {
+    SafeArea.getSafeAreaInsetsForRootView()
+      .then((result) => {
+        this.setState({ notch: result.safeAreaInsets.top })
+      })
   }
 
 
@@ -203,12 +217,14 @@ export default class SingleImage extends PureComponent {
   renderDefaultHeader = () => (
     <TouchableWithoutFeedback onPress={this.close}>
       <View>
-        <Text style={{
+        {/* <Text style={{
           color: 'white',
           textAlign: 'right',
           padding: 10,
           margin: 30,
-        }}>Close</Text>
+        }}>Close</Text> */}
+        <AntDesign name="close" color="#fff" size={RFValue(20)} style={{ padding: 10, margin: 10, }} />
+
       </View>
     </TouchableWithoutFeedback>
   )
@@ -227,15 +243,19 @@ export default class SingleImage extends PureComponent {
               ref.scrollResponderHandleStartShouldSetResponder = () => true;
             }
           }}
-          contentContainerStyle={{ flex: 1 }}
+          contentContainerStyle={{ flex: 1, justifyContent: 'center' }}
           maximumZoomScale={2}
           alwaysBounceVertical={false}
         >
-          <Image
-            source={{ uri: url }}
-            style={[{ flex: 1 }, { resizeMode: 'contain' }]}
-            {...this.panResponder.panHandlers}
-          />
+          <TouchableWithoutFeedback onPress={this.close} >
+            <View style={{ width: '100%', justifyContent: 'center', height: '100%' }}>
+              <Image
+                source={{ uri: url }}
+                style={[{ height: '35%', width: '80%', alignSelf: 'center' }, { resizeMode: 'contain' }]}
+                {...this.panResponder.panHandlers}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         </ScrollView>
       </Animated.View>
     );
@@ -253,8 +273,9 @@ export default class SingleImage extends PureComponent {
       >
         <Animated.View style={[{
           ...StyleSheet.absoluteFillObject,
-          backgroundColor: 'black',
+          backgroundColor: 'rgba(0, 0,0, 0.6);',
         }, opacity]} />
+
         <SwipeableViews
           disabled={animating || panning}
           index={this.state.index}
@@ -271,8 +292,9 @@ export default class SingleImage extends PureComponent {
           top: 0,
           left: 0,
           right: 0,
+          marginTop: this.state.notch
         }]}>
-          {this.renderDefaultHeader()}
+          {/* {this.renderDefaultHeader()} */}
         </Animated.View>
       </Modal>
     );
@@ -285,11 +307,11 @@ export default class SingleImage extends PureComponent {
       fullscreen,
       selectedImageHidden,
       index,
-      
+
     } = this.state;
-    const { uri,style } = this.props;
+    const { uri, style } = this.props;
     const getOpacity = () => ({
-      opacity: selectedImageHidden ? 0 : 1,
+      opacity: selectedImageHidden ? 1 : 1,
     });
     return (
       <View>
@@ -297,7 +319,7 @@ export default class SingleImage extends PureComponent {
           <View style={index + 1 === 1 ? getOpacity() : null}>
             <ImageCustom
               url={uri}
-              style={[{ resizeMode: 'cover', height: '100%', width: '100%', borderRadius: 8 },style]}
+              style={[{ resizeMode: 'cover', height: '100%', width: '100%', borderRadius: 8 }, style]}
               ref={ref => this.captureCarouselItem(ref, index + 1)}
               index={index + 1}
             />

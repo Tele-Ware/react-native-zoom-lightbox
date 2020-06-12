@@ -8,8 +8,10 @@ import {
   StyleSheet,Dimensions,
 } from 'react-native';
 import SwipeableViews from 'react-swipeable-views-native';
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import PropTypes from 'prop-types';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const ANIM_CONFIG = { duration: 200 };
 const { width, height } = Dimensions.get('window');
@@ -200,12 +202,13 @@ export default function (WrappedComponent) {
         renderDefaultHeader = () => (
           <TouchableWithoutFeedback onPress={this.close}>
             <View>
-              <Text style={{
+              {/* <Text style={{
                 color: 'white',
                 textAlign: 'right',
                 padding: 10,
                 margin: 30,
-              }}>Close</Text>
+              }}>Close</Text> */}
+              <AntDesign name="close" color="#fff" size={RFValue(20)} />
             </View>
           </TouchableWithoutFeedback>
         )
