@@ -273,7 +273,7 @@ export default class SingleImage extends PureComponent {
       >
         <Animated.View style={[{
           ...StyleSheet.absoluteFillObject,
-          backgroundColor: 'rgba(0, 0,0, 0.6);',
+          backgroundColor: 'rgba(0, 0,0, 0.7);',
         }, opacity]} />
 
         <SwipeableViews
@@ -330,5 +330,3 @@ export default class SingleImage extends PureComponent {
     );
   }
 }
-
-
