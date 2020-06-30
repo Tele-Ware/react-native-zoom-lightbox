@@ -6,6 +6,8 @@ import {
   PanResponder, Image,
   ScrollView, Modal,
   StyleSheet, Dimensions,
+  TouchableOpacity,
+  TouchableHighlight
 } from 'react-native';
 import SwipeableViews from 'react-swipeable-views-native';
 import PropTypes from 'prop-types';
@@ -20,7 +22,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 export default class SingleImage extends PureComponent {
 
   state = {
-    notch: 0
+    notch: 0,
+    fullScreen: false
   }
 
   static propTypes = {
@@ -103,7 +106,7 @@ export default class SingleImage extends PureComponent {
         {
           fullscreen: true,
           animating: true,
-          origin: { x: 100, y: 100, width: 100, height: 100 },
+          origin: { x, y, width, height },
           target: { x: 0, y: 0, opacity: 1 },
           index: index - 1,
         },
@@ -118,7 +121,7 @@ export default class SingleImage extends PureComponent {
     this.setState({ animating: true });
     this.carouselItems[this.state.index + 1].carouselItems[this.state.index + 1].measure((rx, ry, width, height, x, y) => {
       this.setState({
-        origin: { x: 100, y: 100, width: 100, height: 100 },
+        origin: { x, y, width, height },
         slidesDown: x + width < 0 || x > width,
       });
 
@@ -127,6 +130,7 @@ export default class SingleImage extends PureComponent {
           fullscreen: false,
           selectedImageHidden: false,
           slidesDown: false,
+          fullScreen: false
         });
       });
     });
@@ -229,6 +233,18 @@ export default class SingleImage extends PureComponent {
     </TouchableWithoutFeedback>
   )
 
+  handleFullScreen = async () => {
+    await this.setState(prevState => {
+      return {
+        ...prevState,
+        fullScreen: !prevState.fullScreen
+      }
+    })
+
+    if (!this.state.fullScreen)
+      this.close()
+  }
+
   renderFullscreenContent = (url) => () => {
     const { panning } = this.state;
     const containerStyle = [
@@ -248,12 +264,17 @@ export default class SingleImage extends PureComponent {
           alwaysBounceVertical={false}
         >
           <TouchableWithoutFeedback onPress={this.close} >
-            <View style={{ width: '100%', justifyContent: 'center', height: '100%' }}>
-              <Image
-                source={{ uri: url }}
-                style={[{ height: '35%', width: '80%', alignSelf: 'center' }, { resizeMode: 'contain' }]}
-                {...this.panResponder.panHandlers}
-              />
+            <View style={[{ width: '100%', justifyContent: 'center', alignItems: 'center', height: '100%' }, this.state.fullScreen ? { backgroundColor: '#000' } : {}]}>
+
+              <TouchableHighlight style={{ height: this.state.fullScreen ? '100%' : '35%', width: this.state.fullScreen ? '100%' : '80%', }} onPress={this.handleFullScreen}>
+
+                <Image
+                  source={{ uri: url }}
+                  style={[{ height: '100%', width: '100%', alignSelf: 'center', }, { resizeMode: 'contain' }]}
+                />
+
+              </TouchableHighlight>
+
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
@@ -273,7 +294,7 @@ export default class SingleImage extends PureComponent {
       >
         <Animated.View style={[{
           ...StyleSheet.absoluteFillObject,
-          backgroundColor: 'rgba(0, 0,0, 0.7);',
+          backgroundColor: 'rgba(0, 0,0, 0.6);',
         }, opacity]} />
 
         <SwipeableViews
@@ -330,3 +351,5 @@ export default class SingleImage extends PureComponent {
     );
   }
 }
+
+
