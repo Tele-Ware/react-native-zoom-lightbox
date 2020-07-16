@@ -100,6 +100,7 @@ export default class SingleImage extends PureComponent {
     })
   )
   open = (index) => () => {
+    !!this.props.onPress && this.props.onPress()
     const activeComponent = this.carouselItems[index].carouselItems[index];
     activeComponent.measure((rx, ry, width, height, x, y) => {
       this.setState(
@@ -118,6 +119,7 @@ export default class SingleImage extends PureComponent {
   }
 
   close = () => {
+    !!this.props.onClose && this.props.onClose()
     this.setState({ animating: true });
     this.carouselItems[this.state.index + 1].carouselItems[this.state.index + 1].measure((rx, ry, width, height, x, y) => {
       this.setState({
