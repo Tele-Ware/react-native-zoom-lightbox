@@ -106,7 +106,7 @@ export default class SingleImage extends PureComponent {
         {
           fullscreen: true,
           animating: true,
-          origin: { x, y, width, height },
+          origin: { x: 100, y: 100, width: 100, height: 100 },
           target: { x: 0, y: 0, opacity: 1 },
           index: index - 1,
         },
@@ -121,7 +121,7 @@ export default class SingleImage extends PureComponent {
     this.setState({ animating: true });
     this.carouselItems[this.state.index + 1].carouselItems[this.state.index + 1].measure((rx, ry, width, height, x, y) => {
       this.setState({
-        origin: { x, y, width, height },
+        origin: { x: 100, y: 100, width: 100, height: 100 },
         slidesDown: x + width < 0 || x > width,
       });
 
