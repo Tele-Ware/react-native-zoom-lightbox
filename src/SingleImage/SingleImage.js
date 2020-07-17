@@ -100,6 +100,7 @@ export default class SingleImage extends PureComponent {
     })
   )
   open = (index) => () => {
+
     !!this.props.onPress && this.props.onPress()
     const activeComponent = this.carouselItems[index].carouselItems[index];
     activeComponent.measure((rx, ry, width, height, x, y) => {
@@ -248,6 +249,7 @@ export default class SingleImage extends PureComponent {
   }
 
   renderFullscreenContent = (url) => () => {
+
     const { panning } = this.state;
     const containerStyle = [
       this.getSwipeableStyle(),
@@ -262,23 +264,23 @@ export default class SingleImage extends PureComponent {
             }
           }}
           contentContainerStyle={{ flex: 1, justifyContent: 'center' }}
-          maximumZoomScale={2}
+          maximumZoomScale={this.state.fullScreen ? 2 : 1}
           alwaysBounceVertical={false}
         >
-          <TouchableWithoutFeedback onPress={this.close} >
-            <View style={[{ width: '100%', justifyContent: 'center', alignItems: 'center', height: '100%' }, this.state.fullScreen ? { backgroundColor: '#000' } : {}]}>
+          {/* <TouchableWithoutFeedback onPress={this.close} > */}
+          <View style={[{ width: '100%', justifyContent: 'center', alignItems: 'center', height: '100%' }, this.state.fullScreen ? { backgroundColor: '#000' } : {}]}>
 
-              <TouchableHighlight style={{ height: this.state.fullScreen ? '100%' : '35%', width: this.state.fullScreen ? '100%' : '80%', }} onPress={this.handleFullScreen}>
+            <TouchableHighlight activeOpacity={1} style={{ height: this.state.fullScreen ? '100%' : '35%', width: this.state.fullScreen ? '100%' : '80%', }} onPress={this.handleFullScreen}>
 
-                <Image
-                  source={{ uri: url }}
-                  style={[{ height: '100%', width: '100%', alignSelf: 'center', }, { resizeMode: 'contain' }]}
-                />
+              <Image
+                source={{ uri: url }}
+                style={[{ height: '100%', width: '100%', alignSelf: 'center', }, { resizeMode: 'contain' }]}
+              />
 
-              </TouchableHighlight>
+            </TouchableHighlight>
 
-            </View>
-          </TouchableWithoutFeedback>
+          </View>
+          {/* </TouchableWithoutFeedback> */}
         </ScrollView>
       </Animated.View>
     );
